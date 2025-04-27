@@ -1,0 +1,386 @@
+<html>
+    <head>
+        <title>Bird's Challenge</title>
+        <style>
+            body{
+                /* background-image: url('https://th.bing.com/th/id/R.c3dda60d28ef8cd7132a5495e95a76cf?rik=LRQ2UqQ9qX0khw&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f1%2f1%2f5%2f1150614-forest-wallpaper-hd-2816x1760-large-resolution.jpg&ehk=bAkIfQxGSZSMfrq56m0nTl1yzFI8xC34sN7Alb0XuTA%3d&risl=&pid=ImgRaw&r=0'); */
+                /* background-image: url('https://th.bing.com/th/id/OIP.iYqhR1dfMPY4S0ZHQptqTwHaE7?rs=1&pid=ImgDetMain'); */
+                background-image: url('for1.webp');
+                background-repeat: no-repeat;
+                image-resolution: blur;
+                background-size:cover;
+            }
+            #board{
+                /* padding-top: 80; */
+                margin-top: 150;
+                margin-left: 50;
+                width: 1400;
+                height: 400;
+                /* border: 2px solid black; */
+                display: grid;
+                grid-template-columns: repeat(18,1fr);
+                grid-template-rows: repeat(4,1fr);
+                /* background-color: red; */
+            }
+            #bird{
+                /* background-image: url('bird2.gif'); */
+                /* background-repeat: no-repeat;
+                background-size: cover;
+                background-color: red; */
+                display: none;
+                /* width: 10px; */
+            }
+            .bomb{
+                /* background-image: url('bomb1.gif');
+                background-repeat: no-repeat;
+                background-size: cover; */
+                grid-row-start: 1;
+                grid-column-start: 19;
+            }
+            .net{
+                background-image: url('net1.png');
+                background-repeat: no-repeat;
+                background-size: cover;
+                grid-row-start: 1;
+                grid-column-start: 19;
+            }
+            .food{
+                /* background-color: red; */
+                grid-row-start: 1;
+                grid-column-start: 19;
+                /* border-radius: 50%; */
+            }
+            #sta{
+                position: absolute;
+                left: 47%;
+                top:45%;
+                border-radius: 50%;
+                width: 100px;
+                height: 100px;
+                font-size: 25px;
+                background-color: red;
+                color: white;
+                cursor: pointer;
+                /* align-items: center;
+                justify-items: center; */
+            }
+            #sta:hover{
+                background-color: lightgreen;
+                color: black;
+            }
+            #restart{
+                position: absolute;
+                left: 46%;
+                top:45%;  
+                font-size: 25px;
+                width: 150px;
+                height: 70px;
+                cursor: pointer;
+                background-color: rgb(249, 73, 73);
+                color: white;
+                /* padding: 10px;   */
+                border-radius: 20px;
+                display: none;
+            }
+            #imgcon{
+                position: absolute;
+                /* margin-left: 40%; */
+                top: 10;
+                display: none;
+                left:43%
+                /* margin-bottom: 100; */
+            }
+            #sc{
+                position: absolute;
+                left: 50;
+                top:60 ;
+                border: 2px solid black;
+                padding: 5;
+                background-color: lightgreen;
+            }
+            #hsc{
+                position: absolute;
+                right: 50;
+                top:60 ;
+                border: 2px solid black;
+                padding: 5;
+                background-color: lightgreen;
+            }
+            #phone{
+                display: none;
+            }
+            @media only screen and (max-width: 600px) {
+                #phone{
+                    display: block;
+                    color:red;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="phone">
+            <center>
+                <h1>please play on laptop</h1>
+            </center>
+        </div>
+        <div id="instructions">
+
+        </div>
+        <div id="imgcon">
+            <img src="bird2.gif" style="width: 80px;" id="i1">
+            <img src="bird2.gif" style="width: 80px;" id="i2">
+            <img src="bird2.gif" style="width: 80px;" id="i3">
+        </div>
+        <h1 id="sc">Score: <span id="score">0</span></h1>
+        <center>
+            <button id="sta" onclick="start()">Start</button>
+            <button id="restart" onclick="restart()">Play Again</button>
+        </center>
+        <div id="board">
+            <!-- <div id="bird"></div> -->
+            <div id="bird"><img src="bird2.gif" style="width: 80px; " ></div>
+            <!-- <div id="bomb"></div> -->
+            <!-- <div id="net"></div> -->
+        </div>
+        <h1 id="hsc">Highest Score: <span id="birdscore">0</span></h1>
+        <audio src="bombblast.mp3" id="bombblast"></audio>
+        <div id="phone">
+            <center>
+                <h1>please play on laptop</h1>
+            </center>
+        </div>
+    </body>
+    <script>
+        let bird={row:1,col:0};
+        let bombarr=[];
+        let netarr=[];
+        let foodarr=[];
+        let s=0;
+        let g1,g2,g3,g4,g5,g6;
+        let hig=localStorage.getItem('birdscore') || 0;
+        document.getElementById('birdscore').innerHTML=hig;
+        function start()
+        {
+            document.getElementById('bird').style.display='block';
+            document.getElementById('imgcon').style.display='block';
+            document.getElementById('sta').style.display='none';
+            creatingfood();
+            movingfood();
+            setTimeout(()=>{
+                creatingbomb();
+                movingbomb();
+            },1000)
+            creatingnet();
+            movingnet();
+        }
+        function restart()
+        {
+            location.reload();
+        }
+
+        function createbomb()
+        {
+            let bomb=document.createElement('div');
+            bomb.classList.add('bomb');
+            let bombimg=document.createElement('img');
+            bombimg.src='bomb1.gif';
+            bombimg.style.width='80px';
+            // bombimg.style.height='140px';
+            bomb.appendChild(bombimg);
+            document.getElementById('board').appendChild(bomb);
+            let r=Math.floor(Math.random()*5);
+            if(r==0)
+            {
+                r=1;
+            }
+            bombarr.push({element:bomb,row:r,col:19});
+        }
+        function movebomb(i)
+        {
+            if(i.col<=0)
+            {
+                i.element.remove();
+            }
+            i.element.style.gridColumnStart=i.col;
+            i.element.style.gridRowStart=i.row;
+            i.col-=1;
+        }
+        function movingbomb()
+        {
+            bombarr.forEach(i=>{
+                movebomb(i);
+                if(i.row==bird.row && i.col==bird.col)
+                {
+                    document.getElementById('bombblast').play();
+                    clearTimeout(g1);
+                    clearTimeout(g2);
+                    clearTimeout(g3);
+                    clearTimeout(g4);
+                    clearTimeout(g5);
+                    clearTimeout(g6);
+                    document.getElementById('bird').style.display='none'
+                    
+                    // setTimeout(()=>{
+                    // clearTimeout()
+                    document.getElementById('board').style.display='none';
+                    document.getElementById('imgcon').style.display='none';
+                    // document.getElementById('sc').style.display='none';
+                    // document.getElementById('hsc').style.display='none';
+                    document.getElementById('restart').style.display='block';
+                    // },1000)
+                    
+
+                }
+            });
+            g1=setTimeout(movingbomb,150);
+        }
+        // movingbomb();
+        function creatingbomb()
+        {
+            createbomb();
+            g2=setTimeout(creatingbomb,2500);
+        }
+        // creatingbomb();
+
+
+        function createnet()
+        {
+            let net=document.createElement('div');
+            net.classList.add('net');
+            let netimg=document.createElement('img');
+            netimg.src='net1.png';
+            netimg.style.width='100px';
+            // netimg.style.height='140px';
+            net.appendChild(netimg);
+            document.getElementById('board').appendChild(net);
+            let ran=Math.floor(Math.random()*5);
+            if(ran==0)
+            {
+                ran=1;
+            }
+            netarr.push({element:net,row:ran,col:19});
+        }
+        function movenet(n)
+        {
+            if(n.col<=0)
+            {
+                n.element.remove();
+            }
+            n.element.style.gridColumnStart=n.col;
+            n.element.style.gridRowStart=n.row;
+            n.col-=1;
+        }
+        function creatingnet()
+        {
+            createnet();
+            g3=setTimeout(creatingnet,2000);
+        }
+        // creatingnet()
+        let gameover=0;
+        let ind=1;
+        function movingnet()
+        {
+            netarr.forEach(n=>{
+                movenet(n);
+                if(n.row==bird.row && n.col==bird.col)
+                {
+                    gameover+=1;
+                    let rem=['i','i1','i2','i3']
+                    document.getElementById(rem[ind]).style.display='none';
+                    ind+=1;
+                    n.element.remove();
+                }
+            });
+            if(gameover>=3)
+            {
+                    document.getElementById('sc').style.display='none';
+                    document.getElementById('hsc').style.display='none';
+                    document.getElementById('board').style.display='none';
+                    document.getElementById('imgcon').style.display='none';
+                    document.getElementById('restart').style.display='block';   
+            }
+            g4=setTimeout(movingnet,150);
+        }
+        // movingnet();
+
+        function createfood()
+        {
+            let food=document.createElement('div');
+            food.classList.add('food');
+            let foodimg=document.createElement('img');
+            foodimg.src='apple1.png';
+            foodimg.style.width='75px';
+            // foodimg.style.height='140px';
+            food.appendChild(foodimg);
+            document.getElementById('board').appendChild(food);
+            let ra=Math.floor(Math.random()*5);
+            if(ra==0)
+            {
+                ra=1;
+            }
+            foodarr.push({element:food,row:ra,col:19});
+        }
+        function movefood(f)
+        {
+            if(f.col<=0)
+            {
+                f.element.remove();
+            }
+            f.element.style.gridColumnStart=f.col;
+            f.element.style.gridRowStart=f.row;
+            f.col-=1;
+        }
+        function movingfood()
+        {
+            foodarr.forEach(f=>{
+                movefood(f);
+                if(f.col==bird.col && f.row==bird.row)
+                {
+                    f.element.remove();
+                    s+=1;
+                }
+            });
+            document.getElementById('score').innerHTML=s;
+            if(s>hig)
+            {
+                localStorage.setItem('birdscore',s);
+                document.getElementById('birdscore').innerHTML=s;
+            }
+            g5=setTimeout(movingfood,150);
+        }
+        // movingfood();
+        function creatingfood()
+        {
+            createfood();
+            g6=setTimeout(creatingfood,1300);
+        }
+        // creatingfood();
+
+        function up()
+        {
+            if(bird.row>1)
+            {
+            bird.row-=1;
+            document.getElementById('bird').style.gridRowStart=bird.row;
+            }
+        }
+        function down()
+        {
+            if(bird.row<4)
+            {
+            bird.row+=1;
+            document.getElementById('bird').style.gridRowStart=bird.row;
+            }
+        }
+        window.addEventListener('keydown',e=>{
+            if(e.key=="ArrowUp")
+            {
+                up();
+            }
+            else if(e.key=="ArrowDown")
+            {
+                down();
+            }
+        });
+    </script>
+</html>
