@@ -1,15 +1,15 @@
 <html>
     <head>
-        <title>Bird's Challenge</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=0.8">
+        <title>Bird's Challenge</title>
         <style>
             body{
                 /* background-image: url('https://th.bing.com/th/id/R.c3dda60d28ef8cd7132a5495e95a76cf?rik=LRQ2UqQ9qX0khw&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f1%2f1%2f5%2f1150614-forest-wallpaper-hd-2816x1760-large-resolution.jpg&ehk=bAkIfQxGSZSMfrq56m0nTl1yzFI8xC34sN7Alb0XuTA%3d&risl=&pid=ImgRaw&r=0'); */
                 /* background-image: url('https://th.bing.com/th/id/OIP.iYqhR1dfMPY4S0ZHQptqTwHaE7?rs=1&pid=ImgDetMain'); */
                 background-image: url('for1.webp');
                 background-repeat: no-repeat;
-/*                 image-resolution: blur;
+                /* image-resolution: blur;
                 background-size:cover; */
             }
             #board{
@@ -112,9 +112,13 @@
                 display: none;
             }
             @media only screen and (max-width: 600px) {
+                #body{
+                    display: none;
+                }
                 #phone{
                     display: block;
-                    color:red;
+                    color: red;
+                    margin-top: 50%;
                 }
             }
         </style>
@@ -125,27 +129,29 @@
                 <h1>please play on laptop</h1>
             </center>
         </div>
-        <div id="instructions">
+        <div id="body">
+            <div id="instructions">
 
+            </div>
+            <div id="imgcon">
+                <img src="bird2.gif" style="width: 80px;" id="i1">
+                <img src="bird2.gif" style="width: 80px;" id="i2">
+                <img src="bird2.gif" style="width: 80px;" id="i3">
+            </div>
+            <h1 id="sc">Score: <span id="score">0</span></h1>
+            <center>
+                <button id="sta" onclick="start()">Start</button>
+                <button id="restart" onclick="restart()">Play Again</button>
+            </center>
+            <div id="board">
+                <!-- <div id="bird"></div> -->
+                <div id="bird"><img src="bird2.gif" style="width: 80px; " ></div>
+                <!-- <div id="bomb"></div> -->
+                <!-- <div id="net"></div> -->
+            </div>
+            <h1 id="hsc">Highest Score: <span id="birdscore">0</span></h1>
+            <audio src="bombblast.mp3" id="bombblast"></audio>
         </div>
-        <div id="imgcon">
-            <img src="bird2.gif" style="width: 80px;" id="i1">
-            <img src="bird2.gif" style="width: 80px;" id="i2">
-            <img src="bird2.gif" style="width: 80px;" id="i3">
-        </div>
-        <h1 id="sc">Score: <span id="score">0</span></h1>
-        <center>
-            <button id="sta" onclick="start()">Start</button>
-            <button id="restart" onclick="restart()">Play Again</button>
-        </center>
-        <div id="board">
-            <!-- <div id="bird"></div> -->
-            <div id="bird"><img src="bird2.gif" style="width: 80px; " ></div>
-            <!-- <div id="bomb"></div> -->
-            <!-- <div id="net"></div> -->
-        </div>
-        <h1 id="hsc">Highest Score: <span id="birdscore">0</span></h1>
-        <audio src="bombblast.mp3" id="bombblast"></audio>
         <div id="phone">
             <center>
                 <h1>please play on laptop</h1>
